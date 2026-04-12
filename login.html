@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>Login Sistema Doméstico</h1>
+
+<div class="login-box">
+
+<input id="usuario" placeholder="Usuário">
+
+<input id="senha" type="password" placeholder="Senha">
+
+<button onclick="login()">Entrar</button>
+
+</div>
+
+<script>
+
+function login(){
+
+let usuario = document.getElementById("usuario").value
+let senha = document.getElementById("senha").value
+
+if(usuario === "Caio" && senha === "Caio33213636#"){
+
+localStorage.setItem("logado",true)
+
+window.location.href = "index.html"
+
+}else{
+
+alert("Usuário ou senha incorretos")
+
+}
+
+}
+
+</script>
+
+</body>
+
+</html>
