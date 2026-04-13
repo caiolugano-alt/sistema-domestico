@@ -1,108 +1,138 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"
+// ===============================
+// VERSÃO DO SISTEMA
+// ===============================
 
-import {
-getFirestore,
-collection,
-addDoc,
-getDocs,
-deleteDoc,
-doc
-
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"
+document.getElementById("versaoSistema").innerText =
+`${SISTEMA.nome} - Versão ${SISTEMA.versao} | ${SISTEMA.autor}`
 
 
-if(!localStorage.getItem("usuarioLogado")){
+// ===============================
+// FIREBASE
+// ===============================
 
-window.location.href="login.html"
+const db = firebase.firestore()
+
+const tabela = document.getElementById("tabelaProdutos")
+
+
+// ===============================
+// CARREGAR PRODUTOS
+// ===============================
+
+function carregarProdutos(){
+
+tabela.innerHTML = ""
+
+db.collection("produtos").onSnapshot(snapshot => {
+
+let totalProdutos = 0
+let totalEstoque = 0
+
+tabela.innerHTML = ""
+
+snapshot.forEach(doc => {
+
+const produto = doc.data()
+const id = doc.id
+
+totalProdutos++
+
+let alerta = "OK"
+
+if(produto.quantidade <= 3){
+
+alerta = "⚠ Estoque baixo"
 
 }
 
+let linha = `
+<tr>
 
-const firebaseConfig = {
+<td>${produto.nome}</td>
 
-apiKey: "AIzaSyAput2s06y-tekou5C9Kokw8t12ttLn9N0",
+<td>${produto.quantidade}</td>
 
-authDomain: "sistema-domestico.firebaseapp.com",
+<td>${produto.preco}</td>
 
-projectId: "sistema-domestico",
+<td>estoque</td>
 
-storageBucket: "sistema-domestico.appspot.com",
+<td>${alerta}</td>
 
-messagingSenderId: "468107360134",
+<td>
+<button onclick="removerProduto('${id}')">
+Remover
+</button>
+</td>
 
-appId: "1:468107360134:web:3c2183422d3dc44ed55e07"
+</tr>
+`
+
+tabela.innerHTML += linha
+
+})
+
+document.getElementById("totalProdutos").innerText = totalProdutos
+
+})
 
 }
 
-
-const app = initializeApp(firebaseConfig)
-
-const db = getFirestore(app)
+carregarProdutos()
 
 
-const lista = document.getElementById("listaProdutos")
+// ===============================
+// ADICIONAR PRODUTO
+// ===============================
 
+function abrirAdicionar(){
 
-async function carregarProdutos(){
+let nome = prompt("Nome do produto")
+let quantidade = prompt("Quantidade")
+let preco = prompt("Preço")
 
-lista.innerHTML=""
+if(!nome) return
 
-const querySnapshot = await getDocs(collection(db,"produtos"))
+db.collection("produtos").add({
 
-querySnapshot.forEach((docItem)=>{
-
-const data = docItem.data()
-
-const li = document.createElement("li")
-
-li.innerHTML = data.nome + " - " + data.quantidade +
-
-" <button onclick='removerProduto(\""+docItem.id+"\")'>Remover</button>"
-
-lista.appendChild(li)
+nome: nome,
+quantidade: Number(quantidade),
+preco: Number(preco)
 
 })
 
 }
 
 
-window.adicionarProduto = async function(){
+// ===============================
+// REMOVER PRODUTO
+// ===============================
 
-const nome = document.getElementById("produtoNome").value
+function removerProduto(id){
 
-const qtd = parseInt(document.getElementById("produtoQtd").value)
-
-
-await addDoc(collection(db,"produtos"),{
-
-nome:nome,
-
-quantidade:qtd
-
-})
-
-
-carregarProdutos()
+db.collection("produtos").doc(id).delete()
 
 }
 
 
-window.removerProduto = async function(id){
+// ===============================
+// EXPORTAR EXCEL
+// ===============================
 
-await deleteDoc(doc(db,"produtos",id))
+function exportarExcel(){
 
-carregarProdutos()
-
-}
-
-
-window.logout = function(){
-
-localStorage.removeItem("usuarioLogado")
-
-window.location.href="login.html"
+alert("Exportação Excel em desenvolvimento")
 
 }
 
 
-carregarProdutos()
+// ===============================
+// BOTÃO SAIR
+// ===============================
+
+function sairSistema(){
+
+localStorage.removeItem("logado")
+
+window.location.href = "login.html"
+
+}
