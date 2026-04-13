@@ -2,7 +2,7 @@ const SISTEMA = {
 
 nome: "Sistema Doméstico",
 
-versao: "1.0.0",
+versao: "1.1.0",
 
 autor: "Caio Almeida",
 

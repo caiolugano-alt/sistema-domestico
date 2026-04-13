@@ -3,8 +3,6 @@
 
 <head>
 
-<meta charset="UTF-8">
-
 <title>Sistema Doméstico</title>
 
 <link rel="stylesheet" href="style.css">
@@ -13,56 +11,24 @@
 
 <body>
 
-<h1>Controle Doméstico</h1>
+<h1>Sistema Doméstico</h1>
 
-<div id="infoSistema"></div>
+<button onclick="logout()">Sair</button>
 
-<div class="dashboard">
+<h2>Adicionar Produto</h2>
 
-<div class="card">
-<h3>Total em Estoque</h3>
-<p id="totalEstoque">0</p>
-</div>
+<input id="produtoNome" placeholder="Nome">
 
-<div class="card">
-<h3>Total Gastos</h3>
-<p id="totalGastos">0</p>
-</div>
+<input id="produtoQtd" type="number" placeholder="Quantidade">
 
-<div class="card">
-<h3>Produtos</h3>
-<p id="totalProdutos">0</p>
-</div>
+<button onclick="adicionarProduto()">Adicionar</button>
 
-</div>
+<h2>Produtos</h2>
 
-<table>
-
-<thead>
-
-<tr>
-
-<th>Produto</th>
-<th>Quantidade</th>
-<th>Preço</th>
-<th>Situação</th>
-<th>Alerta IA</th>
-<th>Ações</th>
-
-</tr>
-
-</thead>
-
-<tbody id="listaProdutos"></tbody>
-
-</table>
-
-<button onclick="adicionarProduto()">Adicionar Produto</button>
-
-<button onclick="exportarExcel()">Exportar Excel</button>
+<ul id="listaProdutos"></ul>
 
 <script src="config.js"></script>
-<script src="app.js"></script>
+<script type="module" src="script.js"></script>
 
 </body>
 

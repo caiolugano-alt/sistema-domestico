@@ -1,66 +1,108 @@
-async function adicionarCompra(){
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"
 
-const produto = document.getElementById("produto").value
-const quantidade = document.getElementById("quantidade").value
-const preco = document.getElementById("preco").value
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+deleteDoc,
+doc
 
-await fetch("http://localhost:3000/compras",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body: JSON.stringify({
-produto,
-quantidade,
-preco
-})
-})
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"
 
-document.getElementById("produto").value = ""
-document.getElementById("quantidade").value = ""
-document.getElementById("preco").value = ""
 
-carregarCompras()
+if(!localStorage.getItem("usuarioLogado")){
+
+window.location.href="login.html"
 
 }
 
-async function carregarCompras(){
 
-const resposta = await fetch("http://localhost:3000/compras")
-const compras = await resposta.json()
+const firebaseConfig = {
 
-const lista = document.getElementById("lista")
-lista.innerHTML = ""
+apiKey: "AIzaSyAput2s06y-tekou5C9Kokw8t12ttLn9N0",
 
-let total = 0
+authDomain: "sistema-domestico.firebaseapp.com",
 
-compras.forEach(compra => {
+projectId: "sistema-domestico",
 
-const item = document.createElement("li")
+storageBucket: "sistema-domestico.appspot.com",
 
-item.innerHTML =
-`${compra.produto} - Quantidade: ${compra.quantidade} - R$ ${compra.preco}
-<button onclick="removerCompra(${compra.id})">❌</button>`
+messagingSenderId: "468107360134",
 
-lista.appendChild(item)
-
-total += parseFloat(compra.preco) * parseInt(compra.quantidade)
-
-})
-
-document.getElementById("total").innerText =
-"Total: R$ " + total.toFixed(2)
+appId: "1:468107360134:web:3c2183422d3dc44ed55e07"
 
 }
 
-async function removerCompra(id){
 
-await fetch("http://localhost:3000/compras/" + id,{
-method:"DELETE"
+const app = initializeApp(firebaseConfig)
+
+const db = getFirestore(app)
+
+
+const lista = document.getElementById("listaProdutos")
+
+
+async function carregarProdutos(){
+
+lista.innerHTML=""
+
+const querySnapshot = await getDocs(collection(db,"produtos"))
+
+querySnapshot.forEach((docItem)=>{
+
+const data = docItem.data()
+
+const li = document.createElement("li")
+
+li.innerHTML = data.nome + " - " + data.quantidade +
+
+" <button onclick='removerProduto(\""+docItem.id+"\")'>Remover</button>"
+
+lista.appendChild(li)
+
 })
-
-carregarCompras()
 
 }
 
-carregarCompras()
+
+window.adicionarProduto = async function(){
+
+const nome = document.getElementById("produtoNome").value
+
+const qtd = parseInt(document.getElementById("produtoQtd").value)
+
+
+await addDoc(collection(db,"produtos"),{
+
+nome:nome,
+
+quantidade:qtd
+
+})
+
+
+carregarProdutos()
+
+}
+
+
+window.removerProduto = async function(id){
+
+await deleteDoc(doc(db,"produtos",id))
+
+carregarProdutos()
+
+}
+
+
+window.logout = function(){
+
+localStorage.removeItem("usuarioLogado")
+
+window.location.href="login.html"
+
+}
+
+
+carregarProdutos()
