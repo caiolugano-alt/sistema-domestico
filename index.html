@@ -1,70 +1,101 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
+
 <meta charset="UTF-8">
+
 <title>Sistema Doméstico</title>
 
 <link rel="stylesheet" href="style.css">
+
+<!-- Firebase -->
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<!-- Biblioteca PDF -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 </head>
 
 <body>
 
-<div class="container">
-
 <h1>Controle Doméstico</h1>
 
-<p id="versaoSistema"></p>
+<p>
+Sistema Doméstico - Versão <span id="versao"></span> | Caio Almeida
+</p>
 
-<button onclick="sairSistema()" class="btn-sair">Sair</button>
+<button class="sair" onclick="sair()">Sair</button>
 
-<div class="dashboard">
+<br><br>
+
+<div class="cards">
 
 <div class="card">
+
 <h3>Total em Estoque</h3>
-<p id="totalEstoque">R$ 0</p>
+
+<p id="estoque">R$ 0</p>
+
 </div>
 
 <div class="card">
+
 <h3>Total Gastos</h3>
-<p id="totalGastos">R$ 0</p>
+
+<p id="gastos">R$ 0</p>
+
 </div>
 
 <div class="card">
+
 <h3>Produtos</h3>
+
 <p id="totalProdutos">0</p>
+
 </div>
 
 </div>
+
+<br>
+
+<p><b>Mês Atual:</b> <span id="mesAtual"></span></p>
+
+<br>
+
+<button onclick="addProduto()">Adicionar Produto</button>
+
+<button onclick="exportarExcel()">Exportar Excel</button>
+
+<button onclick="gerarPDF()">Gerar PDF</button>
 
 <table>
 
 <thead>
+
 <tr>
+
 <th>Produto</th>
 <th>Quantidade</th>
 <th>Preço</th>
 <th>Situação</th>
 <th>Alerta IA</th>
 <th>Ações</th>
+
 </tr>
+
 </thead>
 
-<tbody id="tabelaProdutos">
-
-</tbody>
+<tbody id="tabela"></tbody>
 
 </table>
 
-<br>
+<!-- Script principal -->
 
-<button onclick="abrirAdicionar()">Adicionar Produto</button>
-<button onclick="exportarExcel()">Exportar Excel</button>
-
-</div>
-
-<script src="config.js"></script>
-<script src="database.js"></script>
 <script src="script.js"></script>
 
 </body>

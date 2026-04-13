@@ -1,138 +1,231 @@
-// ===============================
-// VERSÃO DO SISTEMA
-// ===============================
+// =============================
+// CONFIGURAÇÃO FIREBASE
+// =============================
 
-document.getElementById("versaoSistema").innerText =
-`${SISTEMA.nome} - Versão ${SISTEMA.versao} | ${SISTEMA.autor}`
+const firebaseConfig = {
 
+apiKey: "AIzaSyAput2s06y-tekou5C9Kokw8t12ttLn9N0",
+  authDomain: "sistema-domestico.firebaseapp.com",
+  projectId: "sistema-domestico",
+  storageBucket: "sistema-domestico.firebasestorage.app",
+  messagingSenderId: "468107360134",
+  appId: "1:468107360134:web:3c2183422d3dc44ed55e07",
+  measurementId: "G-XEDS2JJX6J"
 
-// ===============================
-// FIREBASE
-// ===============================
+}
+
+// iniciar firebase
+firebase.initializeApp(firebaseConfig)
 
 const db = firebase.firestore()
 
-const tabela = document.getElementById("tabelaProdutos")
+// =============================
+// VERSÃO DO SISTEMA
+// =============================
 
+const VERSAO_SISTEMA = "1.1.0"
 
-// ===============================
-// CARREGAR PRODUTOS
-// ===============================
+document.getElementById("versao").innerText = VERSAO_SISTEMA
 
-function carregarProdutos(){
+// =============================
+// MESES AUTOMÁTICOS
+// =============================
 
-tabela.innerHTML = ""
+const meses = [
 
-db.collection("produtos").onSnapshot(snapshot => {
+"Janeiro","Fevereiro","Março","Abril","Maio","Junho",
 
-let totalProdutos = 0
-let totalEstoque = 0
+"Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
 
-tabela.innerHTML = ""
+]
 
-snapshot.forEach(doc => {
+const hoje = new Date()
 
-const produto = doc.data()
-const id = doc.id
+const mesAtual = meses[hoje.getMonth()]
 
-totalProdutos++
+const anoAtual = hoje.getFullYear()
 
-let alerta = "OK"
+document.getElementById("mesAtual").innerText = mesAtual + " " + anoAtual
 
-if(produto.quantidade <= 3){
+// =============================
+// LOGIN
+// =============================
 
-alerta = "⚠ Estoque baixo"
+if(localStorage.getItem("logado")!="sim"){
 
-}
-
-let linha = `
-<tr>
-
-<td>${produto.nome}</td>
-
-<td>${produto.quantidade}</td>
-
-<td>${produto.preco}</td>
-
-<td>estoque</td>
-
-<td>${alerta}</td>
-
-<td>
-<button onclick="removerProduto('${id}')">
-Remover
-</button>
-</td>
-
-</tr>
-`
-
-tabela.innerHTML += linha
-
-})
-
-document.getElementById("totalProdutos").innerText = totalProdutos
-
-})
+window.location="login.html"
 
 }
 
-carregarProdutos()
+// =============================
+// BOTÃO SAIR
+// =============================
 
+function sair(){
 
-// ===============================
+localStorage.removeItem("logado")
+
+window.location="login.html"
+
+}
+
+// =============================
+// IA DE ESTOQUE
+// =============================
+
+function IA(qtd){
+
+if(qtd <= 2){
+
+return "⚠️ Vai acabar"
+
+}
+
+if(qtd <= 5){
+
+return "⚠️ Estoque baixo"
+
+}
+
+return "Estoque OK"
+
+}
+
+// =============================
 // ADICIONAR PRODUTO
-// ===============================
+// =============================
 
-function abrirAdicionar(){
+function addProduto(){
 
-let nome = prompt("Nome do produto")
-let quantidade = prompt("Quantidade")
-let preco = prompt("Preço")
+const nome = prompt("Produto")
 
-if(!nome) return
+const qtd = Number(prompt("Quantidade"))
+
+const preco = Number(prompt("Preço"))
 
 db.collection("produtos").add({
 
-nome: nome,
-quantidade: Number(quantidade),
-preco: Number(preco)
+nome,
+qtd,
+preco,
+mes: mesAtual,
+ano: anoAtual
 
 })
 
 }
 
+// =============================
+// LISTAR PRODUTOS
+// =============================
 
-// ===============================
+db.collection("produtos")
+
+.where("mes","==",mesAtual)
+
+.onSnapshot(snapshot => {
+
+const tabela = document.getElementById("tabela")
+
+tabela.innerHTML = ""
+
+let total = 0
+let contador = 0
+
+snapshot.forEach(doc => {
+
+const p = doc.data()
+
+contador++
+
+total += p.preco
+
+tabela.innerHTML += `
+
+<tr>
+
+<td>${p.nome}</td>
+<td>${p.qtd}</td>
+<td>R$ ${p.preco}</td>
+<td>${p.qtd <= 2 ? "Baixo" : "Normal"}</td>
+<td>${IA(p.qtd)}</td>
+
+<td>
+
+<button onclick="remover('${doc.id}')">Remover</button>
+
+</td>
+
+</tr>
+
+`
+
+})
+
+document.getElementById("totalProdutos").innerText = contador
+
+document.getElementById("gastos").innerText = "R$ " + total
+
+document.getElementById("estoque").innerText = "R$ " + total
+
+})
+
+// =============================
 // REMOVER PRODUTO
-// ===============================
+// =============================
 
-function removerProduto(id){
+function remover(id){
 
 db.collection("produtos").doc(id).delete()
 
 }
 
+// =============================
+// GERAR PDF
+// =============================
 
-// ===============================
-// EXPORTAR EXCEL
-// ===============================
+function gerarPDF(){
 
-function exportarExcel(){
+const { jsPDF } = window.jspdf
 
-alert("Exportação Excel em desenvolvimento")
+const doc = new jsPDF()
+
+doc.text("Relatório Sistema Doméstico",20,20)
+
+doc.text("Mês: " + mesAtual + " " + anoAtual,20,30)
+
+doc.save("relatorio_domestico.pdf")
 
 }
 
+// =============================
+// EXPORTAR EXCEL
+// =============================
 
-// ===============================
-// BOTÃO SAIR
-// ===============================
+function exportarExcel(){
 
-function sairSistema(){
+let csv = "Produto,Quantidade,Preço\n"
 
-localStorage.removeItem("logado")
+document.querySelectorAll("#tabela tr").forEach(tr => {
 
-window.location.href = "login.html"
+const col = tr.querySelectorAll("td")
+
+if(col.length){
+
+csv += `${col[0].innerText},${col[1].innerText},${col[2].innerText}\n`
+
+}
+
+})
+
+const blob = new Blob([csv])
+
+const a = document.createElement("a")
+
+a.href = URL.createObjectURL(blob)
+
+a.download = "relatorio_produtos.csv"
+
+a.click()
 
 }
