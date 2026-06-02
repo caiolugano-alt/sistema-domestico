@@ -20,4 +20,4 @@ apiKey: "AIzaSyAput2s06y-tekou5C9Kokw8t12ttLn9N0",
 }
 
 firebase.initializeApp(firebaseConfig)
-const db = firebase.firestore()
+window.db = firebase.firestore()
