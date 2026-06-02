@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatórios - Sistema Doméstico</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>Sistema Doméstico</h1>
+
+<h2>Relatório de Gastos</h2>
+
+<button onclick="carregarRelatorio()">
+🔄 Atualizar
+</button>
+
+<button onclick="window.print()">
+🖨️ Imprimir
+</button>
+
+<hr>
+
+<table border="1" width="100%">
+
+<thead>
+<tr>
+<th>Produto</th>
+<th>Categoria</th>
+<th>Quantidade</th>
+<th>Valor (R$)</th>
+</tr>
+</thead>
+
+<tbody id="tabelaRelatorio">
+</tbody>
+
+</table>
+
+<h2 id="totalGeral">
+TOTAL GERAL: R$ 0,00
+</h2>
+
+<script src="relatorios.js"></script>
+
+</body>
+</html>
