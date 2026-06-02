@@ -22,7 +22,7 @@ await db.collection("produtos").get()
 snapshot.forEach(doc => {
 
 const p = doc.data()
-console.log(Registro:", p.mes, p.ano)
+console.log("Registro:", p.mes, p.ano)
 
 const mes = p.mes || ""
 const ano = String(p.ano || "")
@@ -59,7 +59,6 @@ tabela.innerHTML += `
 </tr>
 `
 }
-
 })
 
 document.getElementById("totalGeral").innerHTML =
