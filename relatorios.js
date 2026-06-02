@@ -19,6 +19,7 @@ await db.collection("produtos").get()
 snapshot.forEach(doc => {
 
 const p = doc.data()
+console.log(p)
 
 if (!p.data) return
 
