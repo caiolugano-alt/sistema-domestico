@@ -23,7 +23,7 @@ const db = firebase.firestore()
 // VERSÃO DO SISTEMA
 // =============================
 
-const VERSAO_SISTEMA = "1.2.1"
+const VERSAO_SISTEMA = "1.3.0"
 
 document.getElementById("versao").innerText = VERSAO_SISTEMA
 
