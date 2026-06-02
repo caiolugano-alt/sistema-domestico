@@ -12,6 +12,9 @@ document.getElementById("filtroMes").value
 
 const anoSelecionado =
 document.getElementById("filtroAno").value
+  
+console.log("Mês filtro:", mesSelecionado)
+console.log("Ano filtro:", anoSelecionado)
 
 const snapshot =
 await db.collection("produtos").get()
@@ -19,7 +22,7 @@ await db.collection("produtos").get()
 snapshot.forEach(doc => {
 
 const p = doc.data()
-console.log(p)
+console.log(Registro:", p.mes, p.ano)
 
 const mes = p.mes || ""
 const ano = String(p.ano || "")
