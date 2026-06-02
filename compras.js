@@ -156,6 +156,34 @@ res.json(previsao)
 })
 
 })
+router.get("/relatorio", (req, res) => {
+
+db.all(`
+SELECT compras.*, categorias.nome AS categoria
+FROM compras
+LEFT JOIN categorias
+ON compras.categoria_id = categorias.id
+ORDER BY compras.id DESC
+`, [], (err, rows) => {
+
+if (err) {
+return res.status(500).json(err)
+}
+
+let total = 0
+
+rows.forEach(item => {
+total += Number(item.preco || 0)
+})
+
+res.json({
+compras: rows,
+total: total
+})
+
+})
+
+})
 
 
 module.exports = router
