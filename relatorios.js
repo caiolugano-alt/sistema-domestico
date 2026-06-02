@@ -39,3 +39,7 @@ document.getElementById("totalGeral").innerHTML =
 }
 
 carregarRelatorio()
+
+function gerarPDF() {
+window.print()
+}
