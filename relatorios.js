@@ -21,17 +21,27 @@ snapshot.forEach(doc => {
 const p = doc.data()
 console.log(p)
 
-if (!p.data) return
+const mes = p.mes || ""
+const ano = String(p.ano || "")
 
-const data = new Date(p.data)
 
-const mes = String(data.getMonth() + 1)
-.padStart(2, "0")
-
-const ano = String(data.getFullYear())
+const mapaMeses = {
+"01": "Janeiro",
+"02": "Fevereiro",
+"03": "Março",
+"04": "Abril",
+"05": "Maio",
+"06": "Junho",
+"07": "Julho",
+"08": "Agosto",
+"09": "Setembro",
+"10": "Outubro",
+"11": "Novembro",
+"12": "Dezembro"
+}
 
 if (
-(mesSelecionado === "" || mes === mesSelecionado) &&
+(mesSelecionado === "" || mes === mapaMeses[mesSelecionado]) &&
 (anoSelecionado === "" || ano === anoSelecionado)
 ) {
 
