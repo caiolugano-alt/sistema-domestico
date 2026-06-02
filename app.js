@@ -29,7 +29,9 @@ let produto = {
 nome:"Novo Produto",
 quantidade:1,
 preco:0,
-situacao:"estoque"
+situacao:"estoque",
+data: new Date().toISOString()
+
 
 }
 
